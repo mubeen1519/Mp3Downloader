@@ -1,0 +1,118 @@
+plugins {
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
+    id 'com.chaquo.python'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+android {
+    namespace 'com.pawxy.mp3downloader'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.pawxy.mp3downloader"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+        ndk {
+            abiFilters "armeabi-v7a","x86_64"
+        }
+        python {
+            version "3.8"
+            pip {
+                install "yt-dlp"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.3'
+    }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+    sourceSets {
+        main {
+            python.srcDir "src/main/python"
+        }
+    }
+}
+
+dependencies {
+
+    implementation libs.core.ktx
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.activity.compose
+    implementation platform(libs.compose.bom)
+    implementation libs.ui
+    implementation libs.ui.graphics
+    implementation libs.ui.tooling.preview
+    implementation libs.material3
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.ui.test.junit4
+    debugImplementation libs.ui.tooling
+    debugImplementation libs.ui.test.manifest
+
+    // Compose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+
+    // Navigation in compose
+    implementation "androidx.navigation:navigation-compose:2.6.0"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+
+
+    // Moshi - Type Converter
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.3.0")
+
+    // Icons
+    implementation("androidx.compose.material:material-icons-extended:1.5.0-beta02")
+
+    // ffmpeg
+    implementation('com.arthenica:mobile-ffmpeg-full:4.4')
+
+    // DocumentFile
+    implementation("androidx.documentfile:documentfile:1.0.1")
+
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
+}
